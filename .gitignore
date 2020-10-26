@@ -35,7 +35,7 @@
 *.idea
 *cmak
 
-#NBZ manual change
+#NBZ manual change - add build files
 *.idea
-cmake-build-debug/*
+cmake-build-debug/
 CMakeLists.txt
