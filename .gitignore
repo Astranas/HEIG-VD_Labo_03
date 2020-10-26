@@ -38,3 +38,4 @@
 #NBZ manual change
 *.idea
 cmake-build-debug/*
+CMakeLists.txt
