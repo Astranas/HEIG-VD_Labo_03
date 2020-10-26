@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+#NBZ manual change
+*.idea
+*cmak
+
+#NBZ manual change
+*.idea
+cmake-build-debug/*
