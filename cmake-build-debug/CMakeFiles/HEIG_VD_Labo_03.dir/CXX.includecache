@@ -7,6 +7,12 @@
 #IncludeRegexTransform: 
 
 D:/HEIG/prg1/labo3/labo3/main.cpp
+cstdlib
+-
 iostream
+-
+limits
+-
+iomanip
 -
 

@@ -21,10 +21,45 @@
 
 using namespace std;
 
-#define VIDER_BUFFER cin.ignore(std::numeric_limits<streamsize>::max(),'\n')
+#define VIDER_BUFFER cin.ignore(numeric_limits<streamsize>::max(),'\n')
 
 int main() {
+   // ----------------------------------------------------------------------------
+   // Variable utilisée pour la vérification de l'utilisateur
 
+   int  annee;
 
-	return 0;
+   bool verification = true,
+        bissextile;
+
+   // ----------------------------------------------------------------------------
+   // Saisie de l'utilisateur
+
+   cout << "ce programme ..." << endl;
+   do {
+      cout << "entrer une valeur [1900-2100] :";
+      cin >> annee;
+      if (cin.fail()) {
+         cin.clear();
+         VIDER_BUFFER;
+      }
+      if (annee >= 1900 && annee <= 2100) {
+         verification = false;
+      }
+      else {
+         cout << "/!\\ recommencer" << endl;
+      }
+   } while (verification);
+
+   // ----------------------------------------------------------------------------
+   // Vérification de l'année bissextile
+
+   if (annee % 400 == 0 && annee % 4 && annee % 100 != 0) {
+      bissextile = true;
+   }
+   else {
+      bissextile = false;
+   }
+
+   return EXIT_SUCCESS;
 }
