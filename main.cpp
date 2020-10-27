@@ -9,7 +9,8 @@
   					 calendrier de l'année avec tous les mois et les dates
   					 des différents jours.
 
-  Remarque(s) :
+  Remarque(s) : Les valeurs de verifications d'une annee bissextile ont ete laissees
+                en dur dans le code puisqu'elles proviennent d'une formule.
 
   Compilateur : MinGW-w64
   ---------------------------------------------------------------------------
@@ -17,16 +18,28 @@
 #include <cstdlib>  // Pour le EXIT_SUCCESS
 #include <iostream> // Pour le flux
 #include <limits>   // Pour le numeric_limits<streamsize>
-#include <iomanip>  // Pour le setw(...) et setprecision(...)
+#include <iomanip>  // Pour le setw(...)
 
 using namespace std;
 
 #define VIDER_BUFFER cin.ignore(numeric_limits<streamsize>::max(),'\n')
 
 int main() {
+
    // ----------------------------------------------------------------------------
    // Variables constantes
-   const int ESPACE = 3;
+   const int ESPACE_JOURS      =    2,
+             ESPACE_ALIGNEMENT =    3,
+             NBRE_COLONNES     =    7,
+             ANNEE_MIN         = 1900,
+             ANNEE_MAX         = 2100,
+             MOIS_DEPART       =    1,
+             MOIS_FIN          =   12,
+             MOIS_LONG         =   31,
+             MOIS_COURT        =   30,
+             MOIS_FEVRIER      =   28,
+             MOIS_FEVRIER_BIS  =   29;
+
 
    // ----------------------------------------------------------------------------
    // Variables générales
@@ -48,138 +61,153 @@ int main() {
    char choixUtilisateur;
 
    // ----------------------------------------------------------------------------
-   //Message de bienvenue
+   // Message de bienvenue
    cout << "ce programme ..." << endl;
 
    // ----------------------------------------------------------------------------
-   //Boucle de recommencement selon entree utilisateur
+   // Boucle de recommencement selon entree utilisateur
    do{
 
       // ----------------------------------------------------------------------------
-      // Variable utilisée pour la vérification de l'utilisateur
+      // Variables utilisées pour gérer l'entree de l'utilisateur
       int  annee;
 
-      bool verification = true,
-           bissextile;
+      bool verifAnnee = true,
+           bissextile = true;
 
       // ----------------------------------------------------------------------------
-      // Saisie de l'utilisateur
+      // Saisie de l'année par l'utilisateur
       do {
-         cout << "entrer une valeur [1900-2100] : ";
+         cout << "entrer une valeur [" << ANNEE_MIN << "-" << ANNEE_MAX << "] : ";
          cin >> annee;
+
          if (cin.fail()) {
             cin.clear();
-            VIDER_BUFFER;
          }
-         if (annee >= 1900 && annee <= 2100) {
-            verification = false;
+			VIDER_BUFFER;
+
+         if (annee >= ANNEE_MIN && annee <= ANNEE_MAX) {
+				verifAnnee = false;
          }
          else {
             cout << "/!\\ recommencer" << endl;
          }
-      } while (verification);
+      } while (verifAnnee);
       cout << endl;
 
       // ----------------------------------------------------------------------------
       // Vérification de l'année bissextile
-
-      if (annee % 400 == 0 || (annee % 4 == 0 && annee % 100 != 0)) {
-         bissextile = true;
-      }
-      else {
-         bissextile = false;
-      }
+		// Ne pas modifier les valeurs (voir remarques) !
+		bissextile = (annee % 400 == 0 || (annee % 4 == 0 && annee % 100 != 0));
 
       // ----------------------------------------------------------------------------
-      //Initalisation de la boucle des calendriers
+      // Initalisation de la boucle des calendriers
 
       // Variable pour revenir sur le bon jour lors du mois suivant
       int bonJour = 0;
 
-      for (int i = 1; i <= 12; ++i) {
+      for (int i = MOIS_DEPART; i <= MOIS_FIN; ++i) {
          int nbreJour = 1;
-         int nbreJoursMois;
 
-         //TODO: Trop de redondance pour nbreJourMois ???
          switch(i) {
-            case (int)Mois::JANVIER:   cout << "Janvier ";
-                                       nbreJoursMois = 31;
+            case (int)Mois::JANVIER:   cout << "JANVIER ";
                                        break;
-            case (int)Mois::FEVRIER:   cout << "Fevrier ";
-                                       if (bissextile) {
-                                          nbreJoursMois = 29;
-                                       }
-                                       else {
-                                          nbreJoursMois = 28;
-                                       }
+            case (int)Mois::FEVRIER:   cout << "FEVRIER ";
                                        break;
-            case (int)Mois::MARS:      cout << "Mars ";
-                                       nbreJoursMois = 31;
+            case (int)Mois::MARS:      cout << "MARS ";
                                        break;
-            case (int)Mois::AVRIL:     cout << "Avril ";
-                                       nbreJoursMois = 30;
+            case (int)Mois::AVRIL:     cout << "AVRIL ";
                                        break;
-            case (int)Mois::MAI:       cout << "Mai ";
-                                       nbreJoursMois = 31;
+            case (int)Mois::MAI:       cout << "MAI ";
                                        break;
-            case (int)Mois::JUIN:      cout << "Juin ";
-                                       nbreJoursMois = 30;
+            case (int)Mois::JUIN:      cout << "JUIN ";
                                        break;
-            case (int)Mois::JUILLET:   cout << "Juillet ";
-                                       nbreJoursMois = 31;
+            case (int)Mois::JUILLET:   cout << "JUILLET ";
                                        break;
-            case (int)Mois::AOUT:      cout << "Aout ";
-                                       nbreJoursMois = 31;
+            case (int)Mois::AOUT:      cout << "AOUT ";
                                        break;
-            case (int)Mois::SEPTEMBRE: cout << "Septembre ";
-                                       nbreJoursMois = 30;
+            case (int)Mois::SEPTEMBRE: cout << "SEPTEMBRE ";
                                        break;
-            case (int)Mois::OCTOBRE:   cout << "Octobre ";
-                                       nbreJoursMois = 31;
+            case (int)Mois::OCTOBRE:   cout << "OCTOBRE ";
                                        break;
-            case (int)Mois::NOVEMBRE:  cout << "Novembre ";
-                                       nbreJoursMois = 30;
+            case (int)Mois::NOVEMBRE:  cout << "NOVEMBRE ";
                                        break;
-            case (int)Mois::DECEMBRE:  cout << "Decembre ";
-                                       nbreJoursMois = 31;
+            case (int)Mois::DECEMBRE:  cout << "DECEMBRE ";
                                        break;
             default: break;
          }
 
+			// ----------------------------------------------------------------------------
+			// Calcul du nombre de jour d'un mois
+			// - Les valeurs 2 et 8 correspondent aux expections des mois de Février
+			//   et Aout.
+			int nbreJoursMois;
+
+			if(i % 2 == 0){
+         	if(i == 2){
+					if (bissextile) {
+						nbreJoursMois = MOIS_FEVRIER_BIS;
+					}
+					else {
+						nbreJoursMois = MOIS_FEVRIER;
+					}
+         	} else if(i == 8){
+					nbreJoursMois = MOIS_LONG;
+         	} else {
+					nbreJoursMois = MOIS_COURT;
+         	}
+         } else {
+				nbreJoursMois = MOIS_LONG;
+         }
+
+			// ----------------------------------------------------------------------------
+			// Affichage des colonnes avec gestion des espaces
          cout << annee << endl;
-         cout << "  L  M  M  J  V  S  D" << endl;
+         cout << " L  M  M  J  V  S  D" << endl;
+
          int sautJours = 0;
+
          while(bonJour--) {
-            cout << setw(ESPACE) << " ";
+            cout << setw(ESPACE_ALIGNEMENT) << " ";
+
             ++sautJours;
-            if (sautJours % 7 == 0) {
+
+            if (sautJours % NBRE_COLONNES == 0) {
                cout << endl;
             }
          }
+			// ----------------------------------------------------------------------------
+			// Affichage des jours du mois
          while(nbreJour <= nbreJoursMois){
-            cout << setw(ESPACE) << nbreJour;
+            cout << setw(ESPACE_JOURS) << nbreJour << " ";
+
             ++nbreJour;
             ++sautJours;
-            if (sautJours % 7 == 0) {
+
+            if (sautJours % NBRE_COLONNES == 0) {
                cout << endl;
             }
          }
          cout << endl;
-         bonJour = sautJours % 7;
+         bonJour = sautJours % NBRE_COLONNES;
+
          // On met un saut de ligne s'il n'y en a pas déjà un
          if (bonJour) {
             cout << endl;
          }
       }
 
-      //TODO: Mieux gérer la saisie ?
-      cout << "Voulez-vous recommencer [O/N] ? ";
-      cin  >> choixUtilisateur;
+		// ----------------------------------------------------------------------------
+		// Invitation à recommencer avec gestion de l'entree utilisateur
+      do{
+			cout << "Voulez-vous recommencer [O/N] ? ";
+			cin  >> choixUtilisateur;
 
-      if (cin.fail()) {
-         cin.clear();
-         VIDER_BUFFER;
-      }
+			if (cin.fail()) {
+				cin.clear();
+			}
+			VIDER_BUFFER;
+		}while(choixUtilisateur != 'N' && choixUtilisateur != 'O');
 
    } while(choixUtilisateur == 'O');
 
