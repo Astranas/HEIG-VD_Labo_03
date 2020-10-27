@@ -24,81 +24,164 @@ using namespace std;
 #define VIDER_BUFFER cin.ignore(numeric_limits<streamsize>::max(),'\n')
 
 int main() {
+   // ----------------------------------------------------------------------------
+   // Variables constantes
+   const int ESPACE = 3;
 
-	// ----------------------------------------------------------------------------
-	// Variables générales
-	enum class Mois {JANVIER, FEVRIER, MARS, AVRIL, MAI, JUIN, JUILLET, AOUT, SEPTEMBRE,
-		NOVEMBRE, DECEMBRE};
+   // ----------------------------------------------------------------------------
+   // Variables générales
+   enum class Mois {
+      JANVIER = 1,
+      FEVRIER,
+      MARS,
+      AVRIL,
+      MAI,
+      JUIN,
+      JUILLET,
+      AOUT,
+      SEPTEMBRE,
+      OCTOBRE,
+      NOVEMBRE,
+      DECEMBRE
+   };
 
-	char choixUtilisateur;
+   char choixUtilisateur;
 
-	// ----------------------------------------------------------------------------
-	//Message de bienvenue
-	cout << "ce programme ..." << endl;
+   // ----------------------------------------------------------------------------
+   //Message de bienvenue
+   cout << "ce programme ..." << endl;
 
-	// ----------------------------------------------------------------------------
-	//Boucle de recommencement selon entree utilisateur
+   // ----------------------------------------------------------------------------
+   //Boucle de recommencement selon entree utilisateur
+   do{
 
-	do{
+      // ----------------------------------------------------------------------------
+      // Variable utilisée pour la vérification de l'utilisateur
+      int  annee;
 
-		// ----------------------------------------------------------------------------
-		// Variable utilisée pour la vérification de l'utilisateur
+      bool verification = true,
+           bissextile;
 
-		int  annee;
+      // ----------------------------------------------------------------------------
+      // Saisie de l'utilisateur
+      do {
+         cout << "entrer une valeur [1900-2100] : ";
+         cin >> annee;
+         if (cin.fail()) {
+            cin.clear();
+            VIDER_BUFFER;
+         }
+         if (annee >= 1900 && annee <= 2100) {
+            verification = false;
+         }
+         else {
+            cout << "/!\\ recommencer" << endl;
+         }
+      } while (verification);
+      cout << endl;
 
-		bool verification = true,
-			bissextile;
+      // ----------------------------------------------------------------------------
+      // Vérification de l'année bissextile
 
-		// ----------------------------------------------------------------------------
-		// Saisie de l'utilisateur
-		do {
-			cout << "entrer une valeur [1900-2100] : ";
-			cin >> annee;
-			if (cin.fail()) {
-				cin.clear();
-				VIDER_BUFFER;
-			}
-			if (annee >= 1900 && annee <= 2100) {
-				verification = false;
-			}
-			else {
-				cout << "/!\\ recommencer" << endl;
-			}
-		} while (verification);
+      if (annee % 400 == 0 || (annee % 4 == 0 && annee % 100 != 0)) {
+         bissextile = true;
+      }
+      else {
+         bissextile = false;
+      }
 
-		// ----------------------------------------------------------------------------
-		// Vérification de l'année bissextile
+      // ----------------------------------------------------------------------------
+      //Initalisation de la boucle des calendriers
 
-		if (annee % 400 == 0 || (annee % 4 == 0 && annee % 100 != 0)) {
-			bissextile = true;
-		}
-		else {
-			bissextile = false;
-		}
+      // Variable pour revenir sur le bon jour lors du mois suivant
+      int bonJour = 0;
 
-		int nbreJour = 1;
-		int mois     = 1;
+      for (int i = 1; i <= 12; ++i) {
+         int nbreJour = 1;
+         int nbreJoursMois;
 
-		//TODO: affecter le nombre de jours du mois en fonction du mois
-		int nbreJoursMois;
+         //TODO: Trop de redondance pour nbreJourMois ???
+         switch(i) {
+            case (int)Mois::JANVIER:   cout << "Janvier ";
+                                       nbreJoursMois = 31;
+                                       break;
+            case (int)Mois::FEVRIER:   cout << "Fevrier ";
+                                       if (bissextile) {
+                                          nbreJoursMois = 29;
+                                       }
+                                       else {
+                                          nbreJoursMois = 28;
+                                       }
+                                       break;
+            case (int)Mois::MARS:      cout << "Mars ";
+                                       nbreJoursMois = 31;
+                                       break;
+            case (int)Mois::AVRIL:     cout << "Avril ";
+                                       nbreJoursMois = 30;
+                                       break;
+            case (int)Mois::MAI:       cout << "Mai ";
+                                       nbreJoursMois = 31;
+                                       break;
+            case (int)Mois::JUIN:      cout << "Juin ";
+                                       nbreJoursMois = 30;
+                                       break;
+            case (int)Mois::JUILLET:   cout << "Juillet ";
+                                       nbreJoursMois = 31;
+                                       break;
+            case (int)Mois::AOUT:      cout << "Aout ";
+                                       nbreJoursMois = 31;
+                                       break;
+            case (int)Mois::SEPTEMBRE: cout << "Septembre ";
+                                       nbreJoursMois = 30;
+                                       break;
+            case (int)Mois::OCTOBRE:   cout << "Octobre ";
+                                       nbreJoursMois = 31;
+                                       break;
+            case (int)Mois::NOVEMBRE:  cout << "Novembre ";
+                                       nbreJoursMois = 30;
+                                       break;
+            case (int)Mois::DECEMBRE:  cout << "Decembre ";
+                                       nbreJoursMois = 31;
+                                       break;
+            default: break;
+         }
 
-		//TODO: boucler et afficher calendrier
-		/*
-		while(nbreJour < nbreJoursMois){
+         cout << annee << endl;
+         cout << "  L  M  M  J  V  S  D" << endl;
+         int sautJours = 0;
+         while(bonJour--) {
+            cout << setw(ESPACE) << " ";
+            ++sautJours;
+            if (sautJours % 7 == 0) {
+               cout << endl;
+            }
+         }
+         while(nbreJour <= nbreJoursMois){
+            cout << setw(ESPACE) << nbreJour;
+            ++nbreJour;
+            ++sautJours;
+            if (sautJours % 7 == 0) {
+               cout << endl;
+            }
+         }
+         cout << endl;
+         bonJour = sautJours % 7;
+         // On met un saut de ligne s'il n'y en a pas déjà un
+         if (bonJour) {
+            cout << endl;
+         }
+      }
 
-		 nbreJour++;
-		}
-		*/
+      //TODO: Mieux gérer la saisie ?
+      cout << "Voulez-vous recommencer [O/N] ? ";
+      cin  >> choixUtilisateur;
 
-		cout << "Voulez-vous recommencer [O/N] ? ";
-		cin  >> choixUtilisateur;
+      if (cin.fail()) {
+         cin.clear();
+         VIDER_BUFFER;
+      }
 
-		if (cin.fail()) {
-			cin.clear();
-			VIDER_BUFFER;
-		}
+   } while(choixUtilisateur == 'O');
 
-	} while(choixUtilisateur == 'O');
-
-	return EXIT_SUCCESS;
+   return EXIT_SUCCESS;
 }
