@@ -40,7 +40,6 @@ int main() {
              MOIS_FEVRIER      =   28,
              MOIS_FEVRIER_BIS  =   29;
 
-
    // ----------------------------------------------------------------------------
    // Variables générales
    enum class Mois {
@@ -176,6 +175,7 @@ int main() {
                cout << endl;
             }
          }
+
 			// ----------------------------------------------------------------------------
 			// Affichage des jours du mois
          while(nbreJour <= nbreJoursMois){
