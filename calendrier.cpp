@@ -12,8 +12,11 @@
   Remarque(s) : Les valeurs de verifications d'une annee bissextile ont ete laissees
                 en dur dans le code puisqu'elles proviennent d'une formule.
 
-                Source pour calcul 1er Janvier :
+                Source pour calcul du jour du 1er Janvier :
                 https://cs.uwaterloo.ca/~alopez-o/math-faq/node73.html
+
+                Source pour calcul du nombre de jours dans 1 mois :
+                http://www.dispersiondesign.com/articles/time/number_of_days_in_a_month
 
   Compilateur : MinGW-w64
   ---------------------------------------------------------------------------
@@ -38,11 +41,7 @@ int main() {
              ANNEE_MIN         = 1900,
              ANNEE_MAX         = 2100,
              MOIS_DEPART       =    1,
-             MOIS_FIN          =   12,
-             MOIS_LONG         =   31,
-             MOIS_COURT        =   30,
-             MOIS_FEVRIER      =   28,
-             MOIS_FEVRIER_BIS  =   29;
+             MOIS_FIN          =   12;
 
    // ----------------------------------------------------------------------------
    // Variables générales
@@ -157,26 +156,11 @@ int main() {
 
 			// ----------------------------------------------------------------------------
 			// Calcul du nombre de jour d'un mois
-			// - Les tests sur les valeurs 2 et 8 correspondent aux exceptions des mois
-			// de Février et Aout.
-			int nbreJoursMois;
+			// On remarque un pattern qui se répète tous les 7 mois, dans lequel se trouve
+			// un deuxième pattern se repetant tous les 2 mois. Il ne reste plus qu'a gerer
+			// le mois de fevrier et les annees bissextiles. Cela donne le calcul suivant
+			int nbreJoursMois = (i == 2) ? (28 + bissextile) : 31 - (i - 1) % 7 % 2;
 
-			if(i % 2 == 0){
-         	if(i == 2){
-					if (bissextile) {
-						nbreJoursMois = MOIS_FEVRIER_BIS;
-					}
-					else {
-						nbreJoursMois = MOIS_FEVRIER;
-					}
-         	} else if(i == 8){
-					nbreJoursMois = MOIS_LONG;
-         	} else {
-					nbreJoursMois = MOIS_COURT;
-         	}
-         } else {
-				nbreJoursMois = MOIS_LONG;
-         }
 
 			// ----------------------------------------------------------------------------
 			// Affichage des colonnes avec gestion des espaces
@@ -212,7 +196,7 @@ int main() {
          // On recalcule le jour de départ pour le mois suivant
 			jourDepart = sautJours % NBRE_COLONNES;
 
-         // On met un saut de ligne s'il n'anneeSiecle en a pas déjà un
+         // On met un saut de ligne s'il n'y en a pas déjà un
          if (jourDepart) {
             cout << endl;
          }
