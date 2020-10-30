@@ -10,14 +10,7 @@
   					 des différents jours.
 
   Remarque(s) : Les valeurs de verifications d'une annee bissextile ont ete laissees
-                en dur dans le code puisqu'elles proviennent d'une formule. C'est aussi
-					 le cas pour la formule du calcul du bon jour du mois de janvier.
-
-                Source pour calcul du jour du 1er Janvier :
-                https://cs.uwaterloo.ca/~alopez-o/math-faq/node73.html
-
-                Source pour calcul du nombre de jours dans 1 mois :
-                http://www.dispersiondesign.com/articles/time/number_of_days_in_a_month
+                en dur dans le code puisqu'elles proviennent d'une formule.
 
   Compilateur : MinGW-w64
   ---------------------------------------------------------------------------
@@ -26,7 +19,6 @@
 #include <iostream> // Pour le flux
 #include <limits>   // Pour le numeric_limits<streamsize>
 #include <iomanip>  // Pour le setw(...)
-#include <cmath>	  // Pour le calcul du jour du 1er Janvier -> fonction floor()
 
 using namespace std;
 
@@ -42,7 +34,11 @@ int main() {
              ANNEE_MIN         = 1900,
              ANNEE_MAX         = 2100,
              MOIS_DEPART       =    1,
-             MOIS_FIN          =   12;
+             MOIS_FIN          =   12,
+             MOIS_LONG         =   31,
+             MOIS_COURT        =   30,
+             MOIS_FEVRIER      =   28,
+             MOIS_FEVRIER_BIS  =   29;
 
    // ----------------------------------------------------------------------------
    // Variables générales
@@ -103,32 +99,16 @@ int main() {
 		// Ne pas modifier les valeurs (voir remarques) !
 		bissextile = (annee % 400 == 0 || (annee % 4 == 0 && annee % 100 != 0));
 
-		// ----------------------------------------------------------------------------		
-		// Formule pour calculer le jour de la semaine pour le 1er janvier
-		// Ne pas modifier les valeurs (voir remarques) !
-		int anneeSiecle = (annee % 100) - 1 ; // les deux derniers chiffres de l'annee
-		int siecle 	    =  annee / 100;  	  // les deux premiers chiffres de l'annee
-		int jourSemaine =
-			+ (int)floor((2.6 * 11)  - 0.2)
-			+ (int)floor(anneeSiecle / 4)
-			+ (int)floor(siecle 		 / 4)
-			- 2 * siecle + anneeSiecle
-			+ 1 ;
+      // ----------------------------------------------------------------------------
+      // Initalisation de la boucle des calendriers
 
-		// Un decalage s'opere sur le 1er Janvier puisque le resultat du calcul precedent
-		// se base sur une semaine commencant un dimanche
-		int jourDepart =
-			(jourSemaine % 7) == 0 ?
-			(jourSemaine % 7)  + 6 :
-			(jourSemaine % 7)  - 1;
+      // Variable pour revenir sur le bon jour lors du mois suivant
+      int bonJour = 0;
 
-		// ----------------------------------------------------------------------------
-		// Initalisation de la boucle des calendriers
-		for (int i = MOIS_DEPART; i <= MOIS_FIN; ++i) {
+      for (int i = MOIS_DEPART; i <= MOIS_FIN; ++i) {
+         int nbreJour = 1;
 
-			int nbreJour = 1;
-
-			switch(i) {
+         switch(i) {
             case (int)Mois::JANVIER:   cout << "JANVIER ";
                                        break;
             case (int)Mois::FEVRIER:   cout << "FEVRIER ";
@@ -158,11 +138,26 @@ int main() {
 
 			// ----------------------------------------------------------------------------
 			// Calcul du nombre de jour d'un mois
-			// On remarque un pattern qui se répète tous les 7 mois, dans lequel se trouve
-			// un deuxième pattern se repetant tous les 2 mois. Il ne reste plus qu'a gerer
-			// le mois de fevrier et les annees bissextiles. Cela donne le calcul suivant
-			int nbreJoursMois = (i == 2) ? (28 + bissextile) : 31 - (i - 1) % 7 % 2;
+			// - Les valeurs 2 et 8 correspondent aux expections des mois de Février
+			//   et Aout.
+			int nbreJoursMois;
 
+			if(i % 2 == 0){
+         	if(i == 2){
+					if (bissextile) {
+						nbreJoursMois = MOIS_FEVRIER_BIS;
+					}
+					else {
+						nbreJoursMois = MOIS_FEVRIER;
+					}
+         	} else if(i == 8){
+					nbreJoursMois = MOIS_LONG;
+         	} else {
+					nbreJoursMois = MOIS_COURT;
+         	}
+         } else {
+				nbreJoursMois = MOIS_LONG;
+         }
 
 			// ----------------------------------------------------------------------------
 			// Affichage des colonnes avec gestion des espaces
@@ -171,7 +166,7 @@ int main() {
 
          int sautJours = 0;
 
-         while(jourDepart--) {
+         while(bonJour--) {
             cout << setw(ESPACE_ALIGNEMENT) << " ";
 
             ++sautJours;
@@ -194,12 +189,10 @@ int main() {
             }
          }
          cout << endl;
-
-         // On recalcule le jour de départ pour le mois suivant
-			jourDepart = sautJours % NBRE_COLONNES;
+         bonJour = sautJours % NBRE_COLONNES;
 
          // On met un saut de ligne s'il n'y en a pas déjà un
-         if (jourDepart) {
+         if (bonJour) {
             cout << endl;
          }
       }
