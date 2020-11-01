@@ -68,7 +68,7 @@ int main() {
    cout << "ce programme ..." << endl;
 
    // ----------------------------------------------------------------------------
-   // Boucle de recommencement selon entree utilisateur
+   // Boucle de recommencement
    do{
 
       // ----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ int main() {
            bissextile = true;
 
       // ----------------------------------------------------------------------------
-      // Saisie de l'année par l'utilisateur
+      // Boucle Saisie utilisateur pour l'annee
       do {
          cout << "entrer une valeur [" << ANNEE_MIN << "-" << ANNEE_MAX << "] : ";
          cin >> annee;
@@ -96,6 +96,8 @@ int main() {
             cout << "/!\\ recommencer" << endl;
          }
       } while (verifAnnee);
+      //FIN - Boucle Saisie utilisateur pour l'annee
+      
       cout << endl;
 
       // ----------------------------------------------------------------------------
@@ -106,24 +108,25 @@ int main() {
 		// ----------------------------------------------------------------------------		
 		// Formule pour calculer le jour de la semaine pour le 1er janvier
 		// Ne pas modifier les valeurs (voir remarques) !
-		int anneeSiecle = (annee % 100) - 1 ; // les deux derniers chiffres de l'annee
+		int decennie    = (annee % 100) - 1 ; // les deux derniers chiffres de l'annee
 		int siecle 	    =  annee / 100;  	  // les deux premiers chiffres de l'annee
-		int jourSemaine =
-			+ (int)floor((2.6 * 11)  - 0.2)
-			+ (int)floor(anneeSiecle / 4)
-			+ (int)floor(siecle 		 / 4)
-			- 2 * siecle + anneeSiecle
-			+ 1 ;
+		int premierJanvier = (1
+			+ (int)floor((2.6 * 11) - 0.2)
+			+ (int)floor(decennie   /   4)
+			+ (int)floor(siecle 	   /   4)
+			- 2 * siecle + decennie)
+			% 7;
 
 		// Un decalage s'opere sur le 1er Janvier puisque le resultat du calcul precedent
 		// se base sur une semaine commencant un dimanche
+      // donc Dimanche = 0, Lundi = 1, Mardi = 2, etc...
 		int jourDepart =
-			(jourSemaine % 7) == 0 ?
-			(jourSemaine % 7)  + 6 :
-			(jourSemaine % 7)  - 1;
+			premierJanvier == 0 ?
+			premierJanvier  + 6 :
+			premierJanvier  - 1 ;
 
 		// ----------------------------------------------------------------------------
-		// Initalisation de la boucle des calendriers
+		// Boucle d'affichage du calendrier
 		for (int i = MOIS_DEPART; i <= MOIS_FIN; ++i) {
 
 			int nbreJour = 1;
@@ -157,7 +160,7 @@ int main() {
          }
 
 			// ----------------------------------------------------------------------------
-			// Calcul du nombre de jour d'un mois
+			// Calcul du nombre de jours d'un mois
 			// On remarque un pattern qui se répète tous les 7 mois, dans lequel se trouve
 			// un deuxième pattern se repetant tous les 2 mois. Il ne reste plus qu'a gerer
 			// le mois de fevrier et les annees bissextiles. Cela donne le calcul suivant
@@ -165,7 +168,8 @@ int main() {
 
 
 			// ----------------------------------------------------------------------------
-			// Affichage des colonnes avec gestion des espaces
+			// Affichage des colonnes avec gestion des espaces pour le jour de depart du
+         // mois en cours
          cout << annee << endl;
          cout << " L  M  M  J  V  S  D" << endl;
 
@@ -195,17 +199,17 @@ int main() {
          }
          cout << endl;
 
-         // On recalcule le jour de départ pour le mois suivant
+         // On recalcule le jour de depart pour le mois suivant
 			jourDepart = sautJours % NBRE_COLONNES;
 
-         // On met un saut de ligne s'il n'y en a pas déjà un
+         // On met un saut de ligne s'il n'y en a pas deja un
          if (jourDepart) {
             cout << endl;
          }
-      }
+      } //FIN - Boucle d'affichage du calendrier
 
 		// ----------------------------------------------------------------------------
-		// Invitation à recommencer avec gestion de l'entree utilisateur
+		// Boucle Saisie utilisateur pour recommencer avec gestion des entrees erronees
       do{
 			cout << "Voulez-vous recommencer [O/N] ? ";
 			cin  >> choixUtilisateur;
@@ -214,9 +218,12 @@ int main() {
 				cin.clear();
 			}
 			VIDER_BUFFER;
+
 		}while(choixUtilisateur != 'N' && choixUtilisateur != 'O');
+      //FIN - Boucle Saisie utilisateur pour recommencer
 
    } while(choixUtilisateur == 'O');
+   //FIN - Boucle de recommencement
 
    return EXIT_SUCCESS;
 }
