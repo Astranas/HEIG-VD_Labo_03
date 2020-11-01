@@ -31,10 +31,6 @@
 *.out
 *.app
 
-#NBZ manual change
-*.idea
-*cmak
-
 #NBZ manual change - add build files
 *.idea
 cmake-build-debug/
