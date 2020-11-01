@@ -104,7 +104,6 @@ int main() {
       // Vérification de l'année bissextile
       // Ne pas modifier les valeurs (voir remarques) !
       bissextile = (annee % 400 == 0 || (annee % 4 == 0 && annee % 100 != 0));
-      cout << "Bissextile : " << bissextile << endl;
 
       // ----------------------------------------------------------------------------
       // Formule pour calculer le jour de la semaine pour le 1er janvier
