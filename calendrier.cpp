@@ -87,51 +87,51 @@ int main() {
          if (cin.fail()) {
             cin.clear();
          }
-			VIDER_BUFFER;
+         VIDER_BUFFER;
 
          if (annee >= ANNEE_MIN && annee <= ANNEE_MAX) {
-				verifAnnee = false;
+            verifAnnee = false;
          }
          else {
             cout << "/!\\ recommencer" << endl;
          }
       } while (verifAnnee);
       //FIN - Boucle Saisie utilisateur pour l'annee
-      
+
       cout << endl;
 
       // ----------------------------------------------------------------------------
       // Vérification de l'année bissextile
-		// Ne pas modifier les valeurs (voir remarques) !
-		bissextile = (annee % 400 == 0 || (annee % 4 == 0 && annee % 100 != 0));
+      // Ne pas modifier les valeurs (voir remarques) !
+      bissextile = (annee % 400 == 0 || (annee % 4 == 0 && annee % 100 != 0));
 
-		// ----------------------------------------------------------------------------		
-		// Formule pour calculer le jour de la semaine pour le 1er janvier
-		// Ne pas modifier les valeurs (voir remarques) !
-		int decennie    = (annee % 100) - 1 ; // les deux derniers chiffres de l'annee
-		int siecle 	    =  annee / 100;  	  // les deux premiers chiffres de l'annee
-		int premierJanvier = (1
-			+ (int)floor((2.6 * 11) - 0.2)
-			+ (int)floor(decennie   /   4)
-			+ (int)floor(siecle 	   /   4)
-			- 2 * siecle + decennie)
-			% 7;
+      // ----------------------------------------------------------------------------
+      // Formule pour calculer le jour de la semaine pour le 1er janvier
+      // Ne pas modifier les valeurs (voir remarques) !
+      int decennie    = (annee % 100) - 1 ; // les deux derniers chiffres de l'annee
+      int siecle 	    =  annee / 100;  	  // les deux premiers chiffres de l'annee
+      int premierJanvier = (1
+                            + (int)floor((2.6 * 11) - 0.2)
+                            + (int)floor(decennie   /   4)
+                            + (int)floor(siecle 	 /   4)
+                            - 2 * siecle + decennie)
+                            % 7;
 
-		// Un decalage s'opere sur le 1er Janvier puisque le resultat du calcul precedent
-		// se base sur une semaine commencant un dimanche
+      // Un decalage s'opere sur le 1er Janvier puisque le resultat du calcul precedent
+      // se base sur une semaine commencant un dimanche
       // donc Dimanche = 0, Lundi = 1, Mardi = 2, etc...
-		int jourDepart =
-			premierJanvier == 0 ?
-			premierJanvier  + 6 :
-			premierJanvier  - 1 ;
+      int jourDepart =
+          premierJanvier == 0 ?
+          premierJanvier  + 6 :
+          premierJanvier  - 1 ;
 
-		// ----------------------------------------------------------------------------
-		// Boucle d'affichage du calendrier
-		for (int i = MOIS_DEPART; i <= MOIS_FIN; ++i) {
+      // ----------------------------------------------------------------------------
+      // Boucle d'affichage du calendrier
+      for (int i = MOIS_DEPART; i <= MOIS_FIN; ++i) {
 
-			int nbreJour = 1;
+         int nbreJour = 1;
 
-			switch(i) {
+         switch(i) {
             case (int)Mois::JANVIER:   cout << "JANVIER ";
                                        break;
             case (int)Mois::FEVRIER:   cout << "FEVRIER ";
@@ -159,16 +159,16 @@ int main() {
             default: break;
          }
 
-			// ----------------------------------------------------------------------------
-			// Calcul du nombre de jours d'un mois
-			// On remarque un pattern qui se répète tous les 7 mois, dans lequel se trouve
-			// un deuxième pattern se repetant tous les 2 mois. Il ne reste plus qu'a gerer
-			// le mois de fevrier et les annees bissextiles. Cela donne le calcul suivant
-			int nbreJoursMois = (i == 2) ? (28 + bissextile) : 31 - (i - 1) % 7 % 2;
+         // ----------------------------------------------------------------------------
+         // Calcul du nombre de jours d'un mois
+         // On remarque un pattern qui se répète tous les 7 mois, dans lequel se trouve
+         // un deuxième pattern se repetant tous les 2 mois. Il ne reste plus qu'a gerer
+         // le mois de fevrier et les annees bissextiles. Cela donne le calcul suivant
+         int nbreJoursMois = (i == 2) ? (28 + bissextile) : 31 - (i - 1) % 7 % 2;
 
 
-			// ----------------------------------------------------------------------------
-			// Affichage des colonnes avec gestion des espaces pour le jour de depart du
+         // ----------------------------------------------------------------------------
+         // Affichage des colonnes avec gestion des espaces pour le jour de depart du
          // mois en cours
          cout << annee << endl;
          cout << " L  M  M  J  V  S  D" << endl;
@@ -185,8 +185,8 @@ int main() {
             }
          }
 
-			// ----------------------------------------------------------------------------
-			// Affichage des jours du mois
+         // ----------------------------------------------------------------------------
+         // Affichage des jours du mois
          while(nbreJour <= nbreJoursMois){
             cout << setw(ESPACE_JOURS) << nbreJour << " ";
 
@@ -200,7 +200,7 @@ int main() {
          cout << endl;
 
          // On recalcule le jour de depart pour le mois suivant
-			jourDepart = sautJours % NBRE_COLONNES;
+         jourDepart = sautJours % NBRE_COLONNES;
 
          // On met un saut de ligne s'il n'y en a pas deja un
          if (jourDepart) {
@@ -208,18 +208,18 @@ int main() {
          }
       } //FIN - Boucle d'affichage du calendrier
 
-		// ----------------------------------------------------------------------------
-		// Boucle Saisie utilisateur pour recommencer avec gestion des entrees erronees
+      // ----------------------------------------------------------------------------
+      // Boucle Saisie utilisateur pour recommencer avec gestion des entrees erronees
       do{
-			cout << "Voulez-vous recommencer [O/N] ? ";
-			cin  >> choixUtilisateur;
+         cout << "Voulez-vous recommencer [O/N] ? ";
+         cin  >> choixUtilisateur;
 
-			if (cin.fail()) {
-				cin.clear();
-			}
-			VIDER_BUFFER;
+         if (cin.fail()) {
+            cin.clear();
+         }
+         VIDER_BUFFER;
 
-		}while(choixUtilisateur != 'N' && choixUtilisateur != 'O');
+      }while(choixUtilisateur != 'N' && choixUtilisateur != 'O');
       //FIN - Boucle Saisie utilisateur pour recommencer
 
    } while(choixUtilisateur == 'O');
